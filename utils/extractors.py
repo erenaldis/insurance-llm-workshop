@@ -1,11 +1,9 @@
 import json
-import httpx
 from PyPDF2 import PdfReader
 import streamlit as st
+import anthropic
 
-ANTHROPIC_API_KEY = st.secrets["ANTHROPIC_API_KEY"]
-CLAUDE_MODEL = "claude-3-7-sonnet-latest"
-API_URL = "https://api.anthropic.com/v1/messages"
+client = anthropic.Anthropic()
 
 def extract_text_from_pdf(uploaded_file):
     reader = PdfReader(uploaded_file)
@@ -18,24 +16,25 @@ def run_llm_pipeline(doc_text, taxonomy_dict, prompt_template):
         document_text=doc_text
     )
 
-    headers = {
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "Content-Type": "application/json"
-    }
-
-    body = {
-        "model": CLAUDE_MODEL,
-        "max_tokens": 1024,
-        "system": "You are a helpful assistant that extracts structured data from documents.",
-        "messages": [
-            {"role": "user", "content": prompt}
-        ]
-    }
-
     try:
-        response = httpx.post(API_URL, headers=headers, json=body, timeout=30)
-        result = response.json()["content"][0]["text"]
+        message = client.messages.create(
+            model="claude-3-7-sonnet-20250219",
+            max_tokens=1000,
+            temperature=0.3,
+            system="You are a helpful assistant that extracts structured data from documents.",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": prompt
+                        }
+                    ]
+                }
+            ]
+        )
+        result = message.content[0].text
 
         try:
             return json.loads(result)
