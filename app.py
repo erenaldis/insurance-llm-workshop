@@ -44,7 +44,7 @@ with tab1:
                 taxonomy = json.loads(taxonomy_input)
                 doc_text = extract_text_from_pdf(uploaded_file)
 
-                with st.spinner("Running LLM..."):
+                with st.spinner("Running Claude..."):
                     extracted_json = run_llm_pipeline(doc_text, taxonomy, prompt_template)
 
                 st.subheader("📤 Extracted Information")
@@ -71,7 +71,7 @@ with tab2:
             taxonomy = json.loads(taxonomy_debug)
             result = run_llm_pipeline(sample_text, taxonomy, prompt_debug)
 
-            st.subheader("🔍 LLM Output")
+            st.subheader("🔍 Claude Output")
             st.json(result)
         except Exception as e:
             st.error(f"Error: {str(e)}")
