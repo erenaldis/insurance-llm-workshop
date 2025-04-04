@@ -44,6 +44,8 @@ with tab1:
                 taxonomy = json.loads(taxonomy_input)
                 doc_text = extract_text_from_pdf(uploaded_file)
 
+                st.expander("📄 View Extracted Document Text").write(doc_text)
+
                 with st.spinner("Running Claude..."):
                     extracted_json = run_llm_pipeline(doc_text, taxonomy, prompt_template)
 
