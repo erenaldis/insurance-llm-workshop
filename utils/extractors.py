@@ -4,7 +4,7 @@ from PyPDF2 import PdfReader
 import streamlit as st
 
 ANTHROPIC_API_KEY = st.secrets["ANTHROPIC_API_KEY"]
-CLAUDE_MODEL = "claude-3-sonnet-20240229"
+CLAUDE_MODEL = "claude-3-7-sonnet-latest"
 API_URL = "https://api.anthropic.com/v1/messages"
 
 def extract_text_from_pdf(uploaded_file):
