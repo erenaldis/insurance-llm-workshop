@@ -6,10 +6,11 @@ import re
 
 client = anthropic.Anthropic()
 
+import fitz  # PyMuPDF
+
 def extract_text_from_pdf(uploaded_file):
-    reader = PdfReader(uploaded_file)
-    text = "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
-    return text
+    doc = fitz.open(stream=uploaded_file.read(), filetype="pdf")
+    return "\n".join([page.get_text() for page in doc])
 
 
 def clean_json_output(text):
